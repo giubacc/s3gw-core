@@ -19,7 +19,6 @@ WORKER_DISK               = ((ENV["WORKER_DISK"] || "no") == "yes")
 WORKER_DISK_SIZE          = ENV["WORKER_DISK_SIZE"] || "8G"
 STOP_AFTER_BOOTSTRAP      = ((ENV["STOP_AFTER_BOOTSTRAP"] || "no") == "yes")
 STOP_AFTER_K3S_INSTALL    = ((ENV["STOP_AFTER_K3S_INSTALL"] || "no") == "yes")
-STOP_AFTER_S3GW_DEPLOY    = ((ENV["STOP_AFTER_S3GW_DEPLOY"] || "no") == "yes")
 S3GW_IMAGE                = ENV["S3GW_IMAGE"] || "ghcr.io/aquarist-labs/s3gw:latest"
 S3GW_IMAGE_PULL_POLICY    = ENV["S3GW_IMAGE_PULL_POLICY"] || "Always"
 PROV_USER                 = ENV["PROV_USER"] || "vagrant"
@@ -98,30 +97,22 @@ def ansible_provision (context, ansible_groups, extra_vars)
       end
       context.vm.provision "ansible" do |ansible|
         ansible.limit = "all"
-        ansible.playbook = "playbooks/s3gw-deploy.yaml"
+        ansible.playbook = "playbooks/s3gw-ui-build.yaml"
         ansible.groups = ansible_groups
         ansible.extra_vars = extra_vars
       end
       context.vm.provision "ansible" do |ansible|
         ansible.limit = "all"
-        ansible.playbook = "playbooks/ingress-traefik-deploy.yaml"
+        ansible.playbook = "playbooks/s3gw-chart-apply.yaml"
         ansible.groups = ansible_groups
         ansible.extra_vars = extra_vars
       end
-      if(!STOP_AFTER_S3GW_DEPLOY)
+      if SCENARIO != ""
         context.vm.provision "ansible" do |ansible|
           ansible.limit = "all"
-          ansible.playbook = "playbooks/s3gw-ui-deploy.yaml"
+          ansible.playbook = "playbooks/load-scen.yaml"
           ansible.groups = ansible_groups
           ansible.extra_vars = extra_vars
-        end
-        if SCENARIO != ""
-          context.vm.provision "ansible" do |ansible|
-            ansible.limit = "all"
-            ansible.playbook = "playbooks/load-scen.yaml"
-            ansible.groups = ansible_groups
-            ansible.extra_vars = extra_vars
-          end
         end
       end
     end

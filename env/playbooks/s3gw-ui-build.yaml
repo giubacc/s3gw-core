@@ -43,18 +43,3 @@
         tag: latest
         push: yes
         source: local
-
-- name: s3gw UI deploy
-  hosts: kubectl
-  tasks:
-
-    - name: Apply s3gw-ui-deployment.yaml
-      kubernetes.core.k8s:
-        state: present
-        src: /home/{{ user }}/s3gw-ui/s3gw-ui-deployment.yaml
-
-    - name: Apply s3gw-ui-service.yaml
-      kubernetes.core.k8s:
-        state: present
-        src: /home/{{ user }}/s3gw-ui/s3gw-ui-service.yaml
-
