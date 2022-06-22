@@ -1,8 +1,6 @@
-# K3s on Bare Metal
+# s3gw/Longhorn on Bare Metal
 
-This README will guide you through the setup of a K3s cluster on bare metal.  
-If you are looking for K3s cluster running on virtual machines,
-refer to our [K3s on virtual machines](./README.vm.md).
+Follow this guide if you wish to setup a K3s cluster running s3gw/Longhorn directly on your machine.
 
 # Setup
 
@@ -17,25 +15,26 @@ $ sudo systemctl stop firewalld.service
 
 This is something we intend figuring out in the near future.
 
-## From the internet
+## K3s Installation
 
-One can easily setup k3s with s3gw from the internet, by running
+Install k3s from the internet, by running
 
 ```
 $ curl -sfL https://raw.githubusercontent.com/aquarist-labs/s3gw-core/main/k3s/setup.sh | sh -
 ```
 
-## From source repository
+## Longhorn Deploy
 
-To install a lightweight Kubernetes cluster for development purpose run
-the following commands. It will install open-iscsi and K3s on your local
-system. Additionally, it will deploy Longhorn and the s3gw in the cluster.
+Deploy Longhorn from the internet, by running
 
 ```
-$ cd ~/git/s3gw-core/env
-$ ./setup.sh
+$ kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.2.4/deploy/prerequisite/longhorn-iscsi-installation.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.2.4/deploy/longhorn.yaml
 ```
 
+## s3gw Deploy
+
+Follow the instructions at [s3gw-charts](https://github.com/aquarist-labs/s3gw-charts) repository to deploy s3gw with an Helm chart. 
 # Access the Longhorn UI
 
 The Longhorn UI can be access via the URL `http://longhorn.local`.
@@ -61,17 +60,5 @@ configuration file if your K3s cluster is not accessible via localhost.
 Use the following values in the Longhorn settings page to use the s3gw as
 backup target.
 
-Backup Target: `s3://<BUCKET_NAME>@us/`
+Backup Target: `s3://<BUCKET_NAME>@us/`  
 Backup Target Credential Secret: `s3gw-secret`
-
-# Install K3s on a virtual machine
-
-In order to install k3s on a virtual machine rather than on bare metal, execute:
-
-```
-$ cd ~/git/s3gw-core/env
-$ ./setup.sh --vm
-```
-
-Refer to [K3s on virtual machines](./README.vm.md) for requirements and for
-more configuration options.

@@ -1,9 +1,6 @@
-# K3s on Virtual Machines
+# s3gw/Longhorn on Virtual Machines
 
-Follow this guide if you wish to run a K3s cluster installed on virtual machines.  
-You will have a certain degree of choice in terms of customization options.  
-If you are looking for a more lightweight environment running directly on bare metal,
-refer to our [K3s on bare metal](./README.bm.md).
+Follow this guide if you wish to setup a K3s cluster running s3gw/Longhorn on virtual machines.  
 
 ## Table of Contents
 
@@ -87,7 +84,6 @@ WORKER_MEM                  : The RAM amount used by a worker node (Vagrant form
 WORKER_CPU                  : The CPU amount used by a worker node (Vagrant format)
 WORKER_DISK                 : yes/no, when yes a disk will be allocated for the worker node
 WORKER_DISK_SIZE            : The disk size allocated for a worker node (Vagrant format)
-CONTAINER_ENGINE            : The host's local container engine used to build the s3gw container (podman/docker)
 STOP_AFTER_BOOTSTRAP        : yes/no, when yes stop the provisioning just after the bootstrapping phase
 S3GW_IMAGE                  : The s3gw's container image used when deploying the application on k3s
 PROV_USER                   : The provisioning user used by Ansible (vagrant default)
